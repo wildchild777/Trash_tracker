@@ -1,8 +1,13 @@
 import './App.css'
 import 'leaflet/dist/leaflet.css';
+import LocationFinder from './LocationFinder';
 import { MapContainer, TileLayer } from 'react-leaflet';
 
 function App() {
+  const handleLocationSelect = (coords) => {
+    console.log("App.jsx has the data now", coords);
+  }
+
   return (
     <>
       <section id="top">
@@ -17,6 +22,7 @@ function App() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
+            <LocationFinder onLocationSelect={handleLocationSelect} />
           </MapContainer>
         </div>
       </section>
