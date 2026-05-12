@@ -40,7 +40,7 @@ function App() {
               <Polyline key={index} positions={[
                 [pinPosition.lat, pinPosition.lng],
                 [dest.lat, dest.lng]
-              ]} colour="red" />
+              ]} color="red" />
             )}
           </MapContainer>
         </div>
