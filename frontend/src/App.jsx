@@ -1,11 +1,23 @@
 import './App.css'
 import 'leaflet/dist/leaflet.css';
 import LocationFinder from './LocationFinder';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
+import { useState } from 'react';
 
 function App() {
-  const handleLocationSelect = (coords) => {
-    console.log("App.jsx has the data now", coords);
+  const [trashData, setTrashData] = useState(null);
+  const [pinPosition, setPinPosition] = useState(null);
+
+  const handleLocationSelect = async (coords) => {
+    try {
+      setPinPosition(coords);
+      const response = await fetch(`http://localhost:8080/api/flow?lat=${coords.lat}&lng=${coords.lng}`);
+      const data = await response.json();
+      setTrashData(data);
+      console.log("Data from backend:", data);
+    } catch (error) {
+      console.error("Error from the backend: ", error);
+    }
   }
 
   return (
@@ -23,6 +35,13 @@ function App() {
               url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
             <LocationFinder onLocationSelect={handleLocationSelect} />
+            {pinPosition && <Marker position={pinPosition} />}
+            {trashData && trashData.destinations.map((dest, index) =>
+              <Polyline key={index} positions={[
+                [pinPosition.lat, pinPosition.lng],
+                [dest.lat, dest.lng]
+              ]} colour="red" />
+            )}
           </MapContainer>
         </div>
       </section>
